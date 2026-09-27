@@ -2,9 +2,11 @@
 
 ## Ver el catálogo en el celular o la compu
 1. Abrí la dirección del catálogo que te pase Ignacio (termina en `github.io/...`).
-2. Para buscar algo, escribí en el cuadro de búsqueda (ejemplo: `osito`).
-3. Para ver solo un tipo, tocá los botones: Todos, Tazas, Vasos, Sets.
-4. Si un producto tiene varias fotos, tocá las fotitos chicas para cambiar la grande.
+2. Para buscar algo, escribí en el cuadro de búsqueda (ejemplo: `osito`). No importan las tildes: `tazon` también encuentra "tazón". Podés buscar por código (ejemplo: `vaso-osito`).
+3. Para ver solo un tipo, tocá los botones: Todos, Tazas, Vasos, Sets. Cada botón muestra cuántos hay.
+4. Con "Ordenar" podés ver los productos de la A a la Z.
+5. Si un producto tiene varias fotos, tocá las fotitos chicas para cambiar la grande. Tocá la foto grande para verla ampliada.
+6. Cada producto muestra su código y un botón "Copiar enlace" para compartirlo por chat.
 
 ## Cómo te piden por chat
 1. El cliente toca **“Pedir por chat”** en el producto que le gusta.

@@ -5,8 +5,14 @@
   const buscador = document.getElementById("buscador");
   const filtros = document.getElementById("filtros");
   const estado = document.getElementById("estado");
+  const orden = document.getElementById("orden");
   let productos = [];
   let categoria = "todos";
+
+  // Búsqueda insensible a tildes: "tazon" encuentra "tazón".
+  function normalizar(texto) {
+    return (texto || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
 
   // ---- Lightbox (foto ampliada) ----
   const lb = document.getElementById("lightbox");
@@ -93,12 +99,13 @@
 
     el.innerHTML = `
       <button type="button" class="foto-boton" aria-label="Ampliar foto de ${p.nombre}">
-        <img class="foto" src="${fotos[0] || ""}" alt="${p.nombre}" loading="lazy">
+        <img class="foto" src="${fotos[0] || ""}" alt="${p.nombre}" loading="lazy" decoding="async">
         <span class="lupa" aria-hidden="true">Ampliar</span>
       </button>
       <div class="miniaturas"></div>
       <p class="insignia">${ETIQUETAS[p.categoria] || p.categoria}</p>
       <h3 class="nombre">${p.nombre}</h3>
+      <p class="codigo">Código: ${p.id}</p>
       <p class="descripcion">${p.descripcion || ""}</p>
       ${p.variantes && p.variantes.length ? `<p class="variantes">Colores: ${p.variantes.join(" · ")}</p>` : ""}
       <p class="precio">${formatoPrecio(p)}</p>
@@ -120,7 +127,7 @@
         b.type = "button";
         b.className = "mini" + (i === 0 ? " mini-activa" : "");
         b.setAttribute("aria-label", "Ver foto " + (i + 1) + " de " + p.nombre);
-        b.innerHTML = `<img src="${f}" alt="" loading="lazy">`;
+        b.innerHTML = `<img src="${f}" alt="" loading="lazy" decoding="async">`;
         b.addEventListener("click", () => {
           indice = i;
           fotoImg.src = f;
@@ -180,15 +187,31 @@
   window.addEventListener("hashchange", () => resaltarDesdeHash(true));
 
   function dibujar() {
-    const q = (buscador.value || "").toLowerCase().trim();
+    const q = normalizar(buscador.value).trim();
     grilla.innerHTML = "";
+    estado.innerHTML = "";
     const lista = productos.filter((p) => {
       const okCat = categoria === "todos" || p.categoria === categoria;
-      const okQ = !q || (p.nombre + " " + (p.descripcion || "")).toLowerCase().includes(q);
-      return okCat && okQ;
+      const texto = normalizar(p.nombre + " " + (p.descripcion || "") + " " + p.id);
+      return okCat && (!q || texto.includes(q));
     });
+    if (orden.value === "az") lista.sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+    if (orden.value === "za") lista.sort((a, b) => b.nombre.localeCompare(a.nombre, "es"));
     if (!lista.length) {
-      estado.textContent = "No hay productos que coincidan con la búsqueda.";
+      estado.textContent = "No hay productos que coincidan con la búsqueda. ";
+      const limpiar = document.createElement("button");
+      limpiar.type = "button";
+      limpiar.className = "limpiar";
+      limpiar.textContent = "Limpiar búsqueda y filtros";
+      limpiar.addEventListener("click", () => {
+        buscador.value = "";
+        categoria = "todos";
+        orden.value = "original";
+        filtros.querySelectorAll("button").forEach((x) => x.classList.toggle("activo", x.dataset.cat === "todos"));
+        dibujar();
+        buscador.focus();
+      });
+      estado.appendChild(limpiar);
       return;
     }
     estado.textContent = `${lista.length} producto(s)`;
@@ -205,6 +228,7 @@
     dibujar();
   });
   buscador.addEventListener("input", dibujar);
+  orden.addEventListener("change", dibujar);
 
   // Nombre de la tienda en marca, portada y título.
   document.getElementById("nombre-tienda").textContent = TIENDA.nombre;

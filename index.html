@@ -42,6 +42,13 @@
           <button type="button" data-cat="vasos">Vasos</button>
           <button type="button" data-cat="sets">Sets</button>
         </div>
+        <label class="orden-label" for="orden">Ordenar:
+          <select id="orden">
+            <option value="original">Destacados</option>
+            <option value="az">Nombre A–Z</option>
+            <option value="za">Nombre Z–A</option>
+          </select>
+        </label>
       </div>
       <p id="estado" role="status" aria-live="polite">Cargando catálogo...</p>
       <div id="grilla"></div>
@@ -58,7 +65,13 @@
 
     <section id="nosotros" aria-labelledby="titulo-nosotros">
       <h2 id="titulo-nosotros">Nosotros</h2>
-      <p>Somos un microemprendimiento familiar. Vendemos tazas, vasos, ropa, carteras y más, elegido con cariño. Escribinos por chat ante cualquier duda: te respondemos a la brevedad.</p>
+      <div class="nosotros-interior">
+        <div>
+          <p>Somos un microemprendimiento familiar. Vendemos tazas, vasos, ropa, carteras y más, elegido con cariño.</p>
+          <p>Escribinos por chat ante cualquier duda: te respondemos a la brevedad.</p>
+        </div>
+        <img class="nosotros-foto" src="assets/img/taza_10.png" alt="Set de taza Te quiero mamita con platito y cuchara en caja de regalo" loading="lazy">
+      </div>
     </section>
   </main>
 

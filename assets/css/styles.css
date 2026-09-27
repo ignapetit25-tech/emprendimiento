@@ -162,6 +162,35 @@ section h2 {
 
 #estado { color: var(--suave); margin: 12px 0; }
 
+.orden-label {
+  color: var(--suave);
+  font-size: 0.95rem;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.orden-label select {
+  padding: 8px 10px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: #fff;
+  color: var(--texto);
+}
+
+.limpiar {
+  background: none;
+  border: none;
+  color: var(--acento);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: inherit;
+  padding: 0;
+}
+
 #grilla {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -244,6 +273,7 @@ section h2 {
 }
 
 .nombre { margin: 2px 0 0; font-size: 1.12rem; }
+.codigo { margin: 0; font-size: 0.82rem; color: var(--suave); }
 
 .tarjeta.resaltado {
   border-color: var(--acento);
@@ -323,6 +353,25 @@ a.boton { width: fit-content; padding: 11px 22px; }
   line-height: 26px;
 }
 
+/* Nosotros */
+.nosotros-interior {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.nosotros-interior div { flex: 1 1 320px; }
+
+.nosotros-foto {
+  flex: 0 1 260px;
+  width: 260px;
+  max-width: 36vw;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--borde);
+}
+
 /* Pie / contacto */
 .pie {
   border-top: 1px solid var(--borde);
@@ -399,6 +448,8 @@ a.boton { width: fit-content; padding: 11px 22px; }
   .portada-interior { flex-direction: column; align-items: stretch; }
   .portada-foto { width: 100%; max-width: none; flex: none; }
   .portada h1 { font-size: 1.6rem; }
+  .nosotros-interior { flex-direction: column; align-items: stretch; }
+  .nosotros-foto { width: 100%; max-width: none; flex: none; }
 }
 
 @media (max-width: 560px) {
