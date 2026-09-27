@@ -1,0 +1,7 @@
+# OS / editores
+.DS_Store
+Thumbs.db
+*~
+
+# Dependencias futuras (si se agregan herramientas)
+node_modules/
