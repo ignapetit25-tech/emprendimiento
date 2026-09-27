@@ -4,31 +4,75 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catálogo</title>
+  <meta name="description" content="Catálogo en línea: tazas, vasos y sets. Elegí lo que te gusta y pedilo por chat.">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-  <header class="cabecera">
-    <h1 id="nombre-tienda">Catálogo</h1>
-    <p class="subtitulo">Elegí lo que te gusta y pedilo por chat con un solo botón.</p>
-    <div class="controles">
-      <input id="buscador" type="search" placeholder="Buscar: taza, osito, set..." aria-label="Buscar productos">
-      <nav id="filtros" aria-label="Filtrar por categoría">
-        <button type="button" data-cat="todos" class="activo">Todos</button>
-        <button type="button" data-cat="tazas">Tazas</button>
-        <button type="button" data-cat="vasos">Vasos</button>
-        <button type="button" data-cat="sets">Sets</button>
-      </nav>
+  <nav class="barra" aria-label="Navegación principal">
+    <a class="marca" href="#inicio" id="marca-tienda">Catálogo</a>
+    <div class="enlaces">
+      <a href="#catalogo">Catálogo</a>
+      <a href="#como-comprar">Cómo comprar</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+  </nav>
+
+  <header class="portada" id="inicio">
+    <div class="portada-texto">
+      <h1 id="nombre-tienda">Catálogo</h1>
+      <p class="subtitulo">Tazas, vasos y sets para vos o para regalar. Elegí lo que te gusta y pedilo por chat con un solo botón.</p>
+      <a class="boton boton-portada" href="#catalogo">Ver catálogo</a>
     </div>
   </header>
 
   <main>
-    <p id="estado">Cargando catálogo...</p>
-    <div id="grilla"></div>
+    <section id="catalogo" aria-labelledby="titulo-catalogo">
+      <h2 id="titulo-catalogo">Catálogo</h2>
+      <div class="controles">
+        <input id="buscador" type="search" placeholder="Buscar: taza, osito, set..." aria-label="Buscar productos">
+        <div id="filtros" role="group" aria-label="Filtrar por categoría">
+          <button type="button" data-cat="todos" class="activo">Todos</button>
+          <button type="button" data-cat="tazas">Tazas</button>
+          <button type="button" data-cat="vasos">Vasos</button>
+          <button type="button" data-cat="sets">Sets</button>
+        </div>
+      </div>
+      <p id="estado">Cargando catálogo...</p>
+      <div id="grilla"></div>
+    </section>
+
+    <section id="como-comprar" aria-labelledby="titulo-como">
+      <h2 id="titulo-como">Cómo comprar</h2>
+      <ol class="pasos">
+        <li><strong>Elegí tu producto</strong> en el catálogo. Tocá la foto para verla en grande.</li>
+        <li><strong>Tocá “Pedir por chat”</strong> en el producto que te gusta. Se abre el chat con el mensaje ya escrito.</li>
+        <li><strong>Enviá el mensaje</strong> y coordinamos pago y entrega por chat.</li>
+      </ol>
+    </section>
+
+    <section id="nosotros" aria-labelledby="titulo-nosotros">
+      <h2 id="titulo-nosotros">Nosotros</h2>
+      <p>Somos un microemprendimiento familiar. Vendemos tazas, vasos, ropa, carteras y más, elegido con cariño. Escribinos por chat ante cualquier duda: te respondemos a la brevedad.</p>
+    </section>
   </main>
 
-  <footer class="pie">
-    <p>Para pedir, tocá “Pedir por chat” en el producto. Te abre el chat con el mensaje ya escrito.</p>
+  <footer class="pie" id="contacto">
+    <h2>Contacto</h2>
+    <p id="contacto-linea">Escribinos por chat y te ayudamos con tu pedido.</p>
+    <p><a id="contacto-boton" class="boton" href="#contacto">Abrir chat</a></p>
+    <p class="pie-nota">Catálogo ilustrativo. Precios y stock a confirmar por chat.</p>
   </footer>
+
+  <div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Foto ampliada del producto">
+    <button type="button" class="lb-cerrar" aria-label="Cerrar foto ampliada">×</button>
+    <button type="button" class="lb-anterior" aria-label="Foto anterior">‹</button>
+    <figure class="lb-marco">
+      <img id="lb-foto" src="" alt="">
+      <figcaption id="lb-texto"></figcaption>
+    </figure>
+    <button type="button" class="lb-siguiente" aria-label="Foto siguiente">›</button>
+  </div>
 
   <script src="assets/js/config.js"></script>
   <script src="assets/js/app.js"></script>

@@ -8,6 +8,64 @@
   let productos = [];
   let categoria = "todos";
 
+  // ---- Lightbox (foto ampliada) ----
+  const lb = document.getElementById("lightbox");
+  const lbFoto = document.getElementById("lb-foto");
+  const lbTexto = document.getElementById("lb-texto");
+  const lbCerrar = lb.querySelector(".lb-cerrar");
+  const lbAnt = lb.querySelector(".lb-anterior");
+  const lbSig = lb.querySelector(".lb-siguiente");
+  let lbFotos = [];
+  let lbIndice = 0;
+  let lbNombre = "";
+  let lbOrigen = null; // elemento que abrió, para devolver el foco
+
+  function lbMostrar() {
+    lbFoto.src = lbFotos[lbIndice];
+    lbFoto.alt = lbNombre + " (foto " + (lbIndice + 1) + " de " + lbFotos.length + ")";
+    lbTexto.textContent = lbFotos.length > 1
+      ? lbNombre + " — " + (lbIndice + 1) + " / " + lbFotos.length
+      : lbNombre;
+    const varias = lbFotos.length > 1;
+    lbAnt.hidden = !varias;
+    lbSig.hidden = !varias;
+  }
+
+  function lbAbrir(fotos, indice, nombre, origen) {
+    lbFotos = fotos;
+    lbIndice = indice;
+    lbNombre = nombre;
+    lbOrigen = origen || null;
+    lbMostrar();
+    lb.hidden = false;
+    document.body.classList.add("sin-scroll");
+    lbCerrar.focus();
+  }
+
+  function lbCerrarFn() {
+    lb.hidden = true;
+    document.body.classList.remove("sin-scroll");
+    if (lbOrigen && document.contains(lbOrigen)) lbOrigen.focus();
+  }
+
+  lbCerrar.addEventListener("click", lbCerrarFn);
+  lb.addEventListener("click", (e) => { if (e.target === lb) lbCerrarFn(); });
+  lbAnt.addEventListener("click", () => {
+    lbIndice = (lbIndice - 1 + lbFotos.length) % lbFotos.length;
+    lbMostrar();
+  });
+  lbSig.addEventListener("click", () => {
+    lbIndice = (lbIndice + 1) % lbFotos.length;
+    lbMostrar();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (lb.hidden) return;
+    if (e.key === "Escape") lbCerrarFn();
+    if (e.key === "ArrowLeft" && lbFotos.length > 1) lbAnt.click();
+    if (e.key === "ArrowRight" && lbFotos.length > 1) lbSig.click();
+  });
+
+  // ---- Pedido por chat ----
   function enlacePedido(p) {
     const numero = (TIENDA.numeroChat || "").trim();
     const texto = encodeURIComponent(TIENDA.mensajePlantilla(p));
@@ -26,15 +84,17 @@
     const el = document.createElement("article");
     el.className = "tarjeta";
 
-    const fotoPrincipal = p.fotos && p.fotos.length ? p.fotos[0] : "";
+    const fotos = p.fotos && p.fotos.length ? p.fotos : [];
+    let indice = 0;
     const enlace = enlacePedido(p);
 
     el.innerHTML = `
-      <div class="foto-wrap">
-        <img class="foto" src="${fotoPrincipal}" alt="${p.nombre}" loading="lazy">
-      </div>
+      <button type="button" class="foto-boton" aria-label="Ampliar foto de ${p.nombre}">
+        <img class="foto" src="${fotos[0] || ""}" alt="${p.nombre}" loading="lazy">
+        <span class="lupa" aria-hidden="true">Ampliar</span>
+      </button>
       <div class="miniaturas"></div>
-      <h2 class="nombre">${p.nombre}</h2>
+      <h3 class="nombre">${p.nombre}</h3>
       <p class="descripcion">${p.descripcion || ""}</p>
       ${p.variantes && p.variantes.length ? `<p class="variantes">Colores: ${p.variantes.join(" · ")}</p>` : ""}
       <p class="precio">${formatoPrecio(p)}</p>
@@ -43,16 +103,22 @@
         : `<button class="boton boton-apagado" type="button" data-pedir="${p.id}">Pedir por chat</button>`}
     `;
 
-    // Miniaturas para cambiar la foto principal.
+    // La foto principal abre el lightbox; las miniaturas cambian la foto.
+    const fotoBoton = el.querySelector(".foto-boton");
+    const fotoImg = el.querySelector(".foto");
+    fotoBoton.addEventListener("click", () => lbAbrir(fotos, indice, p.nombre, fotoBoton));
+
     const minis = el.querySelector(".miniaturas");
-    if (p.fotos && p.fotos.length > 1) {
-      p.fotos.forEach((f, i) => {
+    if (fotos.length > 1) {
+      fotos.forEach((f, i) => {
         const b = document.createElement("button");
         b.type = "button";
         b.className = "mini" + (i === 0 ? " mini-activa" : "");
-        b.innerHTML = `<img src="${f}" alt="Vista ${i + 1} de ${p.nombre}" loading="lazy">`;
+        b.setAttribute("aria-label", "Ver foto " + (i + 1) + " de " + p.nombre);
+        b.innerHTML = `<img src="${f}" alt="" loading="lazy">`;
         b.addEventListener("click", () => {
-          el.querySelector(".foto").src = f;
+          indice = i;
+          fotoImg.src = f;
           minis.querySelectorAll(".mini").forEach((m) => m.classList.remove("mini-activa"));
           b.classList.add("mini-activa");
         });
@@ -96,8 +162,23 @@
   });
   buscador.addEventListener("input", dibujar);
 
+  // Nombre de la tienda en marca, portada y título.
   document.getElementById("nombre-tienda").textContent = TIENDA.nombre;
+  document.getElementById("marca-tienda").textContent = TIENDA.nombre;
   document.title = TIENDA.nombre + " — Catálogo";
+
+  // Botón de contacto en el pie: abre el chat general si hay número.
+  const contactoBoton = document.getElementById("contacto-boton");
+  const numero = (TIENDA.numeroChat || "").trim();
+  if (numero) {
+    contactoBoton.href = `https://wa.me/${numero}?text=` + encodeURIComponent("Hola! Tengo una consulta sobre el catálogo.");
+    contactoBoton.target = "_blank";
+    contactoBoton.rel = "noopener";
+  } else {
+    contactoBoton.textContent = "Chat en preparación";
+    contactoBoton.classList.add("boton-apagado");
+    contactoBoton.removeAttribute("href");
+  }
 
   fetch("data/productos.json")
     .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
