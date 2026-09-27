@@ -1,0 +1,65 @@
+[
+  {
+    "id": "vaso-mono",
+    "nombre": "Vaso de vidrio con moño + tapa de bambú",
+    "descripcion": "Vaso de vidrio ondulado con tapa de bambú, sorbete de vidrio y moño decorativo. Colores: lila, amarillo, celeste y rosa.",
+    "precio": null,
+    "categoria": "vasos",
+    "fotos": ["assets/img/taza_01.png"],
+    "variantes": ["Lila", "Amarillo", "Celeste", "Rosa"]
+  },
+  {
+    "id": "taza-gatito",
+    "nombre": "Taza gatito gris con tapa",
+    "descripcion": "Taza de cerámica gris con relieve de gatitos. Incluye tapa-platito con diseño «hello».",
+    "precio": null,
+    "categoria": "tazas",
+    "fotos": ["assets/img/taza_02.png", "assets/img/taza_03.png"],
+    "variantes": []
+  },
+  {
+    "id": "tazon-flores",
+    "nombre": "Tazón flores cuadrillé",
+    "descripcion": "Tazón de cerámica con flores en relieve estilo cuadrillé. Colores: lila, crema y rosa.",
+    "precio": null,
+    "categoria": "tazas",
+    "fotos": ["assets/img/taza_04.png"],
+    "variantes": ["Lila", "Crema", "Rosa"]
+  },
+  {
+    "id": "set-beige-6",
+    "nombre": "Set x6 tazas de cerámica beige",
+    "descripcion": "Caja con 6 tazas de cerámica beige estriadas. Ideal para regalo.",
+    "precio": null,
+    "categoria": "sets",
+    "fotos": ["assets/img/taza_05.png", "assets/img/taza_06.png"],
+    "variantes": []
+  },
+  {
+    "id": "set-blanco-8",
+    "nombre": "Set x8 taza + plato blancos",
+    "descripcion": "Caja con 4 tazas + 4 platos de cerámica blanca estriada (8 piezas).",
+    "precio": null,
+    "categoria": "sets",
+    "fotos": ["assets/img/taza_07.png", "assets/img/taza_08.png"],
+    "variantes": []
+  },
+  {
+    "id": "vaso-osito",
+    "nombre": "Vaso osito con gorro + sorbete",
+    "descripcion": "Vaso de vidrio con forma de osito, tapa tipo gorro y sorbete a rayas. Colores: verde y rosa.",
+    "precio": null,
+    "categoria": "vasos",
+    "fotos": ["assets/img/taza_09.png"],
+    "variantes": ["Verde", "Rosa"]
+  },
+  {
+    "id": "set-mamita",
+    "nombre": "Set «Te quiero mamita»",
+    "descripcion": "Taza + platito + cucharita en caja roja de regalo. Diseño de corazones «Te quiero mamita».",
+    "precio": null,
+    "categoria": "sets",
+    "fotos": ["assets/img/taza_10.png"],
+    "variantes": []
+  }
+]

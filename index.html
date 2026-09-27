@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <header class="cabecera">
+    <h1 id="nombre-tienda">Catálogo</h1>
+    <p class="subtitulo">Elegí lo que te gusta y pedilo por chat con un solo botón.</p>
+    <div class="controles">
+      <input id="buscador" type="search" placeholder="Buscar: taza, osito, set..." aria-label="Buscar productos">
+      <nav id="filtros" aria-label="Filtrar por categoría">
+        <button type="button" data-cat="todos" class="activo">Todos</button>
+        <button type="button" data-cat="tazas">Tazas</button>
+        <button type="button" data-cat="vasos">Vasos</button>
+        <button type="button" data-cat="sets">Sets</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <p id="estado">Cargando catálogo...</p>
+    <div id="grilla"></div>
+  </main>
+
+  <footer class="pie">
+    <p>Para pedir, tocá “Pedir por chat” en el producto. Te abre el chat con el mensaje ya escrito.</p>
+  </footer>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
