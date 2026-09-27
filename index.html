@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catálogo</title>
   <meta name="description" content="Catálogo en línea: tazas, vasos y sets. Elegí lo que te gusta y pedilo por chat.">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
+  <a class="salto" href="#catalogo">Saltar al catálogo</a>
   <nav class="barra" aria-label="Navegación principal">
     <a class="marca" href="#inicio" id="marca-tienda">Catálogo</a>
     <div class="enlaces">
@@ -19,10 +21,13 @@
   </nav>
 
   <header class="portada" id="inicio">
-    <div class="portada-texto">
-      <h1 id="nombre-tienda">Catálogo</h1>
-      <p class="subtitulo">Tazas, vasos y sets para vos o para regalar. Elegí lo que te gusta y pedilo por chat con un solo botón.</p>
-      <a class="boton boton-portada" href="#catalogo">Ver catálogo</a>
+    <div class="portada-interior">
+      <div class="portada-texto">
+        <h1 id="nombre-tienda">Catálogo</h1>
+        <p class="subtitulo">Tazas, vasos y sets para vos o para regalar. Elegí lo que te gusta y pedilo por chat con un solo botón.</p>
+        <a class="boton boton-portada" href="#catalogo">Ver catálogo</a>
+      </div>
+      <img class="portada-foto" src="assets/img/taza_01.png" alt="Vasos de vidrio con moño, tapa de bambú y sorbete" fetchpriority="high">
     </div>
   </header>
 
@@ -38,7 +43,7 @@
           <button type="button" data-cat="sets">Sets</button>
         </div>
       </div>
-      <p id="estado">Cargando catálogo...</p>
+      <p id="estado" role="status" aria-live="polite">Cargando catálogo...</p>
       <div id="grilla"></div>
     </section>
 
@@ -62,6 +67,7 @@
     <p id="contacto-linea">Escribinos por chat y te ayudamos con tu pedido.</p>
     <p><a id="contacto-boton" class="boton" href="#contacto">Abrir chat</a></p>
     <p class="pie-nota">Catálogo ilustrativo. Precios y stock a confirmar por chat.</p>
+    <p><a class="arriba" href="#inicio">Volver arriba</a></p>
   </footer>
 
   <div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Foto ampliada del producto">

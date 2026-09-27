@@ -80,9 +80,12 @@
     return "$ " + Number(p.precio).toLocaleString("es-AR");
   }
 
+  const ETIQUETAS = { tazas: "Taza", vasos: "Vaso", sets: "Set" };
+
   function tarjeta(p) {
     const el = document.createElement("article");
     el.className = "tarjeta";
+    el.id = "prod-" + p.id;
 
     const fotos = p.fotos && p.fotos.length ? p.fotos : [];
     let indice = 0;
@@ -94,6 +97,7 @@
         <span class="lupa" aria-hidden="true">Ampliar</span>
       </button>
       <div class="miniaturas"></div>
+      <p class="insignia">${ETIQUETAS[p.categoria] || p.categoria}</p>
       <h3 class="nombre">${p.nombre}</h3>
       <p class="descripcion">${p.descripcion || ""}</p>
       ${p.variantes && p.variantes.length ? `<p class="variantes">Colores: ${p.variantes.join(" · ")}</p>` : ""}
@@ -101,6 +105,7 @@
       ${enlace
         ? `<a class="boton" href="${enlace}" target="_blank" rel="noopener">Pedir por chat</a>`
         : `<button class="boton boton-apagado" type="button" data-pedir="${p.id}">Pedir por chat</button>`}
+      <button type="button" class="copiar" data-enlace="${p.id}">Copiar enlace</button>
     `;
 
     // La foto principal abre el lightbox; las miniaturas cambian la foto.
@@ -133,8 +138,46 @@
       });
     }
 
+    // Copiar enlace directo al producto (sirve para compartir por chat).
+    el.querySelector("[data-enlace]").addEventListener("click", (e) => {
+      const url = location.href.split("#")[0] + "#prod-" + p.id;
+      const boton = e.currentTarget;
+      const listo = () => {
+        boton.textContent = "¡Enlace copiado!";
+        setTimeout(() => { boton.textContent = "Copiar enlace"; }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(listo, () => alert(url));
+      } else {
+        alert(url);
+      }
+    });
+
     return el;
   }
+
+  // Contadores en los botones de filtro (Todos, Tazas, Vasos, Sets).
+  function actualizarContadores() {
+    filtros.querySelectorAll("button[data-cat]").forEach((b) => {
+      const cat = b.dataset.cat;
+      const n = cat === "todos" ? productos.length : productos.filter((p) => p.categoria === cat).length;
+      const base = b.textContent.replace(/\s*\(\d+\)\s*$/, "");
+      b.textContent = `${base} (${n})`;
+    });
+  }
+
+  // Si la dirección trae #prod-<id>, resalta esa tarjeta y la muestra.
+  // Al redibujar (buscar/filtrar) se conserva el resaltado sin mover la vista.
+  function resaltarDesdeHash(moverVista) {
+    grilla.querySelectorAll(".resaltado").forEach((t) => t.classList.remove("resaltado"));
+    const id = (location.hash || "").replace("#", "");
+    if (!id.startsWith("prod-")) return;
+    const t = document.getElementById(id);
+    if (!t) return;
+    t.classList.add("resaltado");
+    if (moverVista !== false) t.scrollIntoView({ block: "center" });
+  }
+  window.addEventListener("hashchange", () => resaltarDesdeHash(true));
 
   function dibujar() {
     const q = (buscador.value || "").toLowerCase().trim();
@@ -150,6 +193,7 @@
     }
     estado.textContent = `${lista.length} producto(s)`;
     lista.forEach((p) => grilla.appendChild(tarjeta(p)));
+    resaltarDesdeHash(false);
   }
 
   filtros.addEventListener("click", (e) => {
@@ -182,6 +226,6 @@
 
   fetch("data/productos.json")
     .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
-    .then((data) => { productos = data; dibujar(); })
+    .then((data) => { productos = data; actualizarContadores(); dibujar(); resaltarDesdeHash(); })
     .catch(() => { estado.textContent = "No se pudo cargar el catálogo. Revisá data/productos.json."; });
 })();
