@@ -5,3 +5,6 @@ Thumbs.db
 
 # Dependencias futuras (si se agregan herramientas)
 node_modules/
+
+# Configuración local con datos personales (número de chat). NO subir.
+assets/js/config.local.js

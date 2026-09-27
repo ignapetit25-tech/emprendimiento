@@ -28,6 +28,8 @@ Significa que todavía no tiene precio cargado. Se cambia como en el punto anter
 3. El `id` es el código corto sin espacios (ejemplo: `taza-rosa`).
 
 ## Cambiar el número de chat
-1. Abrí `assets/js/config.js`.
-2. Escribí el número en `numeroChat` con código país y sin `+` ni espacios. Ejemplo: `"5491100000000"`.
-3. Guardar. A partir de ahí el botón “Pedir por chat” abre ese número.
+IMPORTANTE: el número es un dato personal y NO debe subirse a GitHub. Por eso vive en un archivo separado que git ignora.
+1. Abrí `assets/js/config.local.js` (solo existe en tu compu, nunca en GitHub).
+2. Escribí el número con código país y sin `+` ni espacios. Ejemplo ficticio: `"5491100000000"`.
+3. Guardar y recargar la página. A partir de ahí el botón “Pedir por chat” abre ese número.
+4. El sitio publicado muestra “Chat en preparación” hasta que decidan qué número público usar.
