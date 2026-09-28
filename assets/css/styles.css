@@ -482,6 +482,7 @@ tbody tr:last-child th,
 tbody tr:last-child td { border-bottom: none; }
 
 tr.sin-stock td { color: var(--suave); }
+tr.balance-negativo td { color: var(--acento-oscuro); font-weight: bold; }
 
 .formulario {
   display: grid;

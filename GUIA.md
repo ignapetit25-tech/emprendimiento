@@ -34,6 +34,14 @@ Significa que todavía no tiene precio cargado. Se cambia como en el punto anter
 4. Si te equivocás, en **Historial** tocá **Borrar** en ese movimiento.
 5. IMPORTANTE: los datos se guardan en ese navegador. Tocá **Descargar Excel** cada tanto y guardá el archivo (se abre con Excel). Si cambiás de compu o navegador, usá **Cargar Excel** para recuperar todo.
 
+## Finanzas
+1. Al pie del catálogo tocá **“Finanzas”** (o abrí `finanzas.html`).
+2. En **Balance mensual** elegí el mes: ves ventas, gastos, costos y el balance (ventas menos gastos menos costos).
+3. Para anotar: elegí el tipo (**venta** si entra plata, **gasto** como luz o alquiler, **costo** como mercadería), escribí el concepto, el monto y la fecha. El producto es opcional.
+4. Si te equivocás, en **Movimientos del mes** tocá **Borrar** en ese movimiento.
+5. IMPORTANTE: los datos se guardan en ese navegador. Tocá **Descargar Excel** cada tanto y guardá el archivo. Si cambiás de compu o navegador, usá **Cargar Excel** para recuperar todo.
+6. El stock se anota aparte: vender algo en finanzas NO descuenta el stock solo. Anotalo también en la página de stock.
+
 ## Cambiar el número de chat
 IMPORTANTE: el número es un dato personal y NO debe subirse a GitHub. Por eso vive en un archivo separado que git ignora.
 1. Abrí `assets/js/config.local.js` (solo existe en tu compu, nunca en GitHub).
