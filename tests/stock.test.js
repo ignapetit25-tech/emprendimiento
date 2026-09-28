@@ -88,25 +88,37 @@ describe("validarRespaldo", () => {
 });
 
 describe("respaldo Excel (CSV)", () => {
-  it("exporta cabecera con punto y coma y BOM para Excel", () => {
-    const csv = movimientosACSV([{ fecha: "2026-01-01T00:00:00.000Z", productoId: "a", tipo: "entrada", cantidad: 2, nota: "" }]);
-    assert.ok(csv.startsWith("\ufefffecha;codigo;tipo;cantidad;nota"));
-    assert.ok(csv.includes("2026-01-01T00:00:00.000Z;a;entrada;2;"));
+  const prods = [{ id: "a", nombre: "Taza Osito" }];
+
+  it("exporta cabecera con producto, fecha legible y totales", () => {
+    const csv = movimientosACSV(
+      [{ fecha: "2026-02-01T10:00:00.000Z", productoId: "a", tipo: "entrada", cantidad: 5, nota: "" }],
+      prods
+    );
+    assert.ok(csv.startsWith("\ufefffecha;codigo;producto;tipo;cantidad;nota"));
+    assert.ok(csv.includes("Taza Osito"));
+    assert.ok(csv.includes("Entrada"));
+    assert.ok(!csv.includes("2026-02-01T10:00:00.000Z"), "la fecha ISO no debe aparecer cruda");
+    assert.ok(csv.includes("TOTALES"));
+    assert.ok(csv.includes("TOTAL;a;Taza Osito;5;;"));
   });
 
   it("escapa notas con punto y coma o comillas", () => {
-    const csv = movimientosACSV([{ fecha: "f", productoId: "a", tipo: "entrada", cantidad: 1, nota: 'compra "mayorista"; urgente' }]);
+    const csv = movimientosACSV(
+      [{ fecha: "2026-01-01T00:00:00.000Z", productoId: "a", tipo: "entrada", cantidad: 1, nota: 'compra "mayorista"; urgente' }],
+      prods
+    );
     const back = csvAMovimientos(csv);
     assert.equal(back.error, undefined);
     assert.equal(back.movimientos[0].nota, 'compra "mayorista"; urgente');
   });
 
-  it("importa lo exportado (ida y vuelta)", () => {
+  it("importa lo exportado (ida y vuelta, totales ignorados)", () => {
     const original = [
       { fecha: "2026-02-01T10:00:00.000Z", productoId: "a", tipo: "entrada", cantidad: 5, nota: "llegó" },
       { fecha: "2026-02-02T10:00:00.000Z", productoId: "a", tipo: "salida", cantidad: 2, nota: "" },
     ];
-    const back = csvAMovimientos(movimientosACSV(original));
+    const back = csvAMovimientos(movimientosACSV(original, prods));
     assert.equal(back.error, undefined);
     assert.equal(back.movimientos.length, 2);
     assert.deepEqual(
@@ -114,6 +126,14 @@ describe("respaldo Excel (CSV)", () => {
       [["a", "entrada", 5, "llegó"], ["a", "salida", 2, ""]]
     );
     assert.deepEqual(calcularExistencias(back.movimientos), { a: 3 });
+  });
+
+  it("acepta formato anterior sin columna producto y fechas ISO", () => {
+    const viejo = "fecha;codigo;tipo;cantidad;nota\n2026-02-01T10:00:00.000Z;a;entrada;5;x";
+    const back = csvAMovimientos(viejo);
+    assert.equal(back.error, undefined);
+    assert.equal(back.movimientos[0].productoId, "a");
+    assert.equal(back.movimientos[0].fecha, "2026-02-01T10:00:00.000Z");
   });
 
   it("rechaza archivos que no son copia de stock", () => {

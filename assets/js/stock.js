@@ -115,10 +115,12 @@
 
   // Respaldo en Excel (CSV): descargar y cargar.
   document.getElementById("btn-exportar").addEventListener("click", () => {
-    const blob = new Blob([movimientosACSV(movimientos)], { type: "text/csv;charset=utf-8" });
+    const blob = new Blob([movimientosACSV(movimientos, productos)], { type: "text/csv;charset=utf-8" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "cytrino-stock-respaldo.csv";
+    const hoy = new Date();
+    const sello = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, "0")}-${String(hoy.getDate()).padStart(2, "0")}`;
+    a.download = `cytrino-stock-${sello}.csv`;
     a.click();
     URL.revokeObjectURL(a.href);
     avisoRespaldo.textContent = "Copia descargada (se abre con Excel).";

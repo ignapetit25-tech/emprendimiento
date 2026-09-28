@@ -62,17 +62,53 @@ function validarRespaldo(datos) {
 }
 
 // Respaldo en formato Excel (CSV con separador ";" y BOM para tildes).
-const CSV_CABECERA = ["fecha", "codigo", "tipo", "cantidad", "nota"];
+// Incluye nombre de producto, fecha legible y sección de totales.
+// La columna "producto" y los TOTALES son informativos: al recargar se ignoran.
+const CSV_CABECERA = ["fecha", "codigo", "producto", "tipo", "cantidad", "nota"];
 
 function escaparCSV(valor) {
   const t = String(valor === null || valor === undefined ? "" : valor);
   return /[";\n\r]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t;
 }
 
-function movimientosACSV(movs) {
+function capitalizar(t) {
+  const s = String(t || "");
+  return s ? s[0].toUpperCase() + s.slice(1) : s;
+}
+
+function fechaLegibleStock(iso) {
+  const f = new Date(iso);
+  if (Number.isNaN(f.getTime())) return iso || "";
+  const p = (n) => String(n).padStart(2, "0");
+  return `${p(f.getDate())}/${p(f.getMonth() + 1)}/${f.getFullYear()} ${p(f.getHours())}:${p(f.getMinutes())}`;
+}
+
+function fechaLegibleAISO(texto) {
+  const t = String(texto || "").trim();
+  if (/^\d{4}-\d{2}-\d{2}T/.test(t)) return t; // ya ISO
+  const m = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?$/);
+  if (!m) return t;
+  const f = new Date(+m[3], +m[2] - 1, +m[1], +(m[4] || 0), +(m[5] || 0));
+  return Number.isNaN(f.getTime()) ? t : f.toISOString();
+}
+
+function movimientosACSV(movs, productos) {
+  const nombres = {};
+  for (const p of productos || []) nombres[p.id] = p.nombre;
+  const datos = [...(movs || [])].sort((a, b) => (a.fecha || "").localeCompare(b.fecha || ""));
   const lineas = [CSV_CABECERA.join(";")];
-  for (const m of movs || []) {
-    lineas.push([m.fecha || "", m.productoId || "", m.tipo || "", m.cantidad ?? "", m.nota || ""]
+  for (const m of datos) {
+    lineas.push([fechaLegibleStock(m.fecha), m.productoId || "", nombres[m.productoId] || "",
+      capitalizar(m.tipo), m.cantidad ?? "", m.nota || ""].map(escaparCSV).join(";"));
+  }
+  lineas.push("");
+  lineas.push("TOTALES;;;;;");
+  const ex = calcularExistencias(movs);
+  const lista = (productos && productos.length)
+    ? productos
+    : [...new Set(datos.map((m) => m.productoId))].map((id) => ({ id, nombre: nombres[id] || "" }));
+  for (const p of lista) {
+    lineas.push(["TOTAL", p.id, nombres[p.id] || p.nombre || "", ex[p.id] || 0, "", ""]
       .map(escaparCSV).join(";"));
   }
   return "\ufeff" + lineas.join("\r\n");
@@ -105,23 +141,32 @@ function csvAMovimientos(texto) {
     return { error: "El archivo está vacío." };
   }
   const lineas = String(texto).replace(/^\ufeff/, "").split(/\r?\n/).filter((l) => l.trim() !== "");
+  // Mapa de columnas por nombre: acepta formato nuevo (con "producto")
+  // y formato anterior (sin "producto").
   const cab = dividirLineaCSV(lineas[0]).map((c) => c.trim().toLowerCase());
-  if (cab.join(";") !== CSV_CABECERA.join(";")) {
-    return { error: "El archivo no es una copia válida de stock (encabezado distinto)." };
+  const idx = {};
+  cab.forEach((nombre, i) => { idx[nombre] = i; });
+  for (const col of ["fecha", "codigo", "tipo", "cantidad", "nota"]) {
+    if (!(col in idx)) {
+      return { error: "El archivo no es una copia válida de stock (encabezado distinto)." };
+    }
   }
+  const nCols = cab.length;
   const movs = [];
   for (let i = 1; i < lineas.length; i++) {
     const c = dividirLineaCSV(lineas[i]);
-    if (c.length !== 5) {
+    if (c.length !== nCols) {
       return { error: `Fila ${i + 1} inválida en el archivo.` };
     }
+    // Filas informativas (TOTALES): se ignoran al recargar.
+    if (/^(total|totales)$/i.test(c[0].trim())) continue;
     movs.push({
       id: "imp" + Date.now().toString(36) + "-" + i,
-      fecha: c[0].trim(),
-      productoId: c[1].trim(),
-      tipo: c[2].trim(),
-      cantidad: Number(c[3].trim()),
-      nota: c[4],
+      fecha: fechaLegibleAISO(c[idx.fecha]),
+      productoId: c[idx.codigo].trim(),
+      tipo: c[idx.tipo].trim().toLowerCase(),
+      cantidad: Number(c[idx.cantidad].trim()),
+      nota: c[idx.nota],
     });
   }
   const invalido = validarRespaldo({ movimientos: movs });

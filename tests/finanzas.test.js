@@ -78,13 +78,20 @@ describe("validarRespaldoFin", () => {
 });
 
 describe("respaldo Excel (CSV)", () => {
-  it("exporta cabecera con BOM e importa lo exportado", () => {
+  const prods = [{ id: "vaso-osito", nombre: "Vaso osito" }];
+
+  it("exporta cabecera con producto, fecha legible y totales", () => {
     const original = [
       { fecha: "2026-03-05", tipo: "venta", concepto: "venta taza; osito", monto: 10000, productoId: "vaso-osito" },
       { fecha: "2026-03-10", tipo: "gasto", concepto: "luz", monto: 2000.5, productoId: "" },
     ];
-    const csv = movimientosACSVFin(original);
-    assert.ok(csv.startsWith("\ufefffecha;tipo;concepto;monto;codigo"));
+    const csv = movimientosACSVFin(original, prods);
+    assert.ok(csv.startsWith("\ufefffecha;tipo;concepto;monto;codigo;producto"));
+    assert.ok(csv.includes("Vaso osito"));
+    assert.ok(csv.includes("05/03/2026"));
+    assert.ok(csv.includes('"2000,50"') || csv.includes("2000,50"));
+    assert.ok(csv.includes("TOTALES"));
+    assert.ok(csv.includes("TOTAL;Balance;"));
     const back = csvAMovimientosFin(csv);
     assert.equal(back.error, undefined);
     assert.equal(back.movimientos.length, 2);
@@ -97,7 +104,7 @@ describe("respaldo Excel (CSV)", () => {
     );
   });
 
-  it("acepta montos con coma decimal (formato Excel argentino)", () => {
+  it("acepta formato anterior y montos con coma decimal", () => {
     const csv = "fecha;tipo;concepto;monto;codigo\n2026-03-05;venta;x;1500,50;";
     const back = csvAMovimientosFin(csv);
     assert.equal(back.error, undefined);
