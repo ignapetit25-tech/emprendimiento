@@ -272,6 +272,18 @@ section h2 {
   padding: 2px 10px;
 }
 
+.sello {
+  margin: 4px 0 0;
+  align-self: flex-start;
+  font-size: 0.8rem;
+  font-weight: bold;
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+
+.sello-nuevo { background: #dde7d2; color: #3f5a2b; }
+.sello-oferta { background: var(--acento); color: #fff; }
+
 .nombre { margin: 2px 0 0; font-size: 1.12rem; }
 .codigo { margin: 0; font-size: 0.82rem; color: var(--suave); }
 
@@ -415,6 +427,19 @@ a.boton { width: fit-content; padding: 11px 22px; }
 }
 
 .lb-marco figcaption { color: #f3ece1; margin-top: 8px; }
+
+.lb-datos {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+#lb-precio { color: #f3ece1; font-size: 1.15rem; font-weight: bold; }
+
+.lb-datos .boton { margin-top: 0; }
 
 .lb-cerrar,
 .lb-anterior,

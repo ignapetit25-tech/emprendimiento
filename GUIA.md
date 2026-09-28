@@ -27,6 +27,11 @@ Significa que todavía no tiene precio cargado. Se cambia como en el punto anter
 2. Agregá un bloque nuevo en `data/productos.json` copiando uno existente y cambiando `id`, `nombre`, `descripcion`, `precio` y `fotos`.
 3. El `id` es el código corto sin espacios (ejemplo: `taza-rosa`).
 
+## Marcar un producto como Nuevo u Oferta
+1. En `data/productos.json`, dentro del producto agregá la línea `"etiqueta": "nuevo",` o `"etiqueta": "oferta",`.
+2. En el catálogo aparece un sello con esa palabra.
+3. Para sacarlo, borrá esa línea.
+
 ## Gestión de stock
 1. Al pie del catálogo tocá **“Gestión de stock”** (o abrí `stock.html`).
 2. En **Existencias** ves cuántas unidades hay de cada producto.

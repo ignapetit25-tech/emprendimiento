@@ -49,6 +49,7 @@
     "nombre": "Vaso osito con gorro + sorbete",
     "descripcion": "Vaso de vidrio con forma de osito, tapa tipo gorro y sorbete a rayas. Colores: verde y rosa.",
     "precio": null,
+    "etiqueta": "nuevo",
     "categoria": "vasos",
     "fotos": ["assets/img/taza_09.jpg"],
     "variantes": ["Verde", "Rosa"]

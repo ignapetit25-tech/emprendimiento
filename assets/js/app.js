@@ -18,29 +18,52 @@
   const lb = document.getElementById("lightbox");
   const lbFoto = document.getElementById("lb-foto");
   const lbTexto = document.getElementById("lb-texto");
+  const lbPrecio = document.getElementById("lb-precio");
+  const lbPedido = document.getElementById("lb-pedido");
   const lbCerrar = lb.querySelector(".lb-cerrar");
   const lbAnt = lb.querySelector(".lb-anterior");
   const lbSig = lb.querySelector(".lb-siguiente");
-  let lbFotos = [];
+  let lbProducto = null;
   let lbIndice = 0;
-  let lbNombre = "";
   let lbOrigen = null; // elemento que abrió, para devolver el foco
 
   function lbMostrar() {
-    lbFoto.src = lbFotos[lbIndice];
-    lbFoto.alt = lbNombre + " (foto " + (lbIndice + 1) + " de " + lbFotos.length + ")";
-    lbTexto.textContent = lbFotos.length > 1
-      ? lbNombre + " — " + (lbIndice + 1) + " / " + lbFotos.length
-      : lbNombre;
-    const varias = lbFotos.length > 1;
+    const fotos = lbProducto.fotos;
+    lbFoto.src = fotos[lbIndice];
+    lbFoto.alt = lbProducto.nombre + " (foto " + (lbIndice + 1) + " de " + fotos.length + ")";
+    lbTexto.textContent = fotos.length > 1
+      ? lbProducto.nombre + " — " + (lbIndice + 1) + " / " + fotos.length
+      : lbProducto.nombre;
+    const varias = fotos.length > 1;
     lbAnt.hidden = !varias;
     lbSig.hidden = !varias;
+    lbPrecio.textContent = formatoPrecio(lbProducto);
+    // Botón de pedido dentro del modal (misma lógica que la tarjeta).
+    lbPedido.innerHTML = "";
+    const enlace = enlacePedido(lbProducto);
+    if (enlace) {
+      const a = document.createElement("a");
+      a.className = "boton";
+      a.href = enlace;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.textContent = "Pedir por chat";
+      lbPedido.appendChild(a);
+    } else {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "boton boton-apagado";
+      b.textContent = "Pedir por chat";
+      b.addEventListener("click", () => {
+        alert("Falta configurar el número de chat en assets/js/config.js (campo numeroChat).");
+      });
+      lbPedido.appendChild(b);
+    }
   }
 
-  function lbAbrir(fotos, indice, nombre, origen) {
-    lbFotos = fotos;
+  function lbAbrir(producto, indice, origen) {
+    lbProducto = producto;
     lbIndice = indice;
-    lbNombre = nombre;
     lbOrigen = origen || null;
     lbMostrar();
     lb.hidden = false;
@@ -57,18 +80,34 @@
   lbCerrar.addEventListener("click", lbCerrarFn);
   lb.addEventListener("click", (e) => { if (e.target === lb) lbCerrarFn(); });
   lbAnt.addEventListener("click", () => {
-    lbIndice = (lbIndice - 1 + lbFotos.length) % lbFotos.length;
+    lbIndice = (lbIndice - 1 + lbProducto.fotos.length) % lbProducto.fotos.length;
     lbMostrar();
   });
   lbSig.addEventListener("click", () => {
-    lbIndice = (lbIndice + 1) % lbFotos.length;
+    lbIndice = (lbIndice + 1) % lbProducto.fotos.length;
     lbMostrar();
+  });
+  // Trampa de foco: Tab cicla dentro del modal abierto.
+  lb.addEventListener("keydown", (e) => {
+    if (e.key !== "Tab") return;
+    const focos = [lbCerrar, lbAnt, lbSig, lbPedido.querySelector("a, button")]
+      .filter((el) => el && !el.hidden);
+    if (!focos.length) return;
+    const primero = focos[0];
+    const ultimo = focos[focos.length - 1];
+    if (e.shiftKey && document.activeElement === primero) {
+      e.preventDefault();
+      ultimo.focus();
+    } else if (!e.shiftKey && document.activeElement === ultimo) {
+      e.preventDefault();
+      primero.focus();
+    }
   });
   document.addEventListener("keydown", (e) => {
     if (lb.hidden) return;
     if (e.key === "Escape") lbCerrarFn();
-    if (e.key === "ArrowLeft" && lbFotos.length > 1) lbAnt.click();
-    if (e.key === "ArrowRight" && lbFotos.length > 1) lbSig.click();
+    if (e.key === "ArrowLeft" && lbProducto.fotos.length > 1) lbAnt.click();
+    if (e.key === "ArrowRight" && lbProducto.fotos.length > 1) lbSig.click();
   });
 
   // ---- Pedido por chat ----
@@ -104,6 +143,8 @@
       </button>
       <div class="miniaturas"></div>
       <p class="insignia">${ETIQUETAS[p.categoria] || p.categoria}</p>
+      ${p.etiqueta === "nuevo" ? `<p class="sello sello-nuevo">Nuevo</p>` : ""}
+      ${p.etiqueta === "oferta" ? `<p class="sello sello-oferta">Oferta</p>` : ""}
       <h3 class="nombre">${p.nombre}</h3>
       <p class="codigo">Código: ${p.id}</p>
       <p class="descripcion">${p.descripcion || ""}</p>
@@ -118,7 +159,7 @@
     // La foto principal abre el lightbox; las miniaturas cambian la foto.
     const fotoBoton = el.querySelector(".foto-boton");
     const fotoImg = el.querySelector(".foto");
-    fotoBoton.addEventListener("click", () => lbAbrir(fotos, indice, p.nombre, fotoBoton));
+    fotoBoton.addEventListener("click", () => lbAbrir(p, indice, fotoBoton));
 
     const minis = el.querySelector(".miniaturas");
     if (fotos.length > 1) {
