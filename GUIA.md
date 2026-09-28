@@ -27,6 +27,13 @@ Significa que todavía no tiene precio cargado. Se cambia como en el punto anter
 2. Agregá un bloque nuevo en `data/productos.json` copiando uno existente y cambiando `id`, `nombre`, `descripcion`, `precio` y `fotos`.
 3. El `id` es el código corto sin espacios (ejemplo: `taza-rosa`).
 
+## Gestión de stock
+1. Al pie del catálogo tocá **“Gestión de stock”** (o abrí `stock.html`).
+2. En **Existencias** ves cuántas unidades hay de cada producto.
+3. Para anotar: en **Anotar movimiento** elegí el producto, el tipo (entrada si te llegaron, salida si vendiste) y la cantidad. Podés agregar una nota.
+4. Si te equivocás, en **Historial** tocá **Borrar** en ese movimiento.
+5. IMPORTANTE: los datos se guardan en ese navegador. Tocá **Descargar copia** cada tanto y guardá el archivo. Si cambiás de compu o navegador, usá **Cargar copia** para recuperar todo.
+
 ## Cambiar el número de chat
 IMPORTANTE: el número es un dato personal y NO debe subirse a GitHub. Por eso vive en un archivo separado que git ignora.
 1. Abrí `assets/js/config.local.js` (solo existe en tu compu, nunca en GitHub).

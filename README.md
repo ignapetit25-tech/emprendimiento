@@ -11,3 +11,5 @@ Cómo funciona:
 - Guía simple en español para persona no técnica: ver `GUIA.md`.
 
 Datos de productos: `data/productos.json`. Fotos: `assets/img/`.
+
+Pruebas: `node --test tests/` (usa el runner incluido en Node, sin dependencias).

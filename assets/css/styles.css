@@ -456,6 +456,96 @@ a.boton { width: fit-content; padding: 11px 22px; }
   .lb-anterior, .lb-siguiente { width: 38px; height: 38px; }
 }
 
+/* Stock: tablas y formulario */
+.ayuda { color: var(--suave); margin-top: 0; }
+
+.tabla-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  overflow: hidden;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--borde);
+}
+
+thead th { background: #efe2cf; }
+
+tbody tr:last-child th,
+tbody tr:last-child td { border-bottom: none; }
+
+tr.sin-stock td { color: var(--suave); }
+
+.formulario {
+  display: grid;
+  gap: 12px;
+  max-width: 520px;
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 16px;
+}
+
+.formulario label { display: grid; gap: 4px; }
+
+.formulario input,
+.formulario select {
+  padding: 10px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.formulario .boton { width: 100%; }
+
+#aviso-mov {
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 10px 12px;
+  max-width: 520px;
+}
+
+.borrar {
+  background: none;
+  border: none;
+  color: var(--acento);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: inherit;
+  padding: 2px 0;
+}
+
+.fila-botones { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.boton-secundario {
+  background: var(--tarjeta);
+  color: var(--texto);
+  border: 1px solid var(--borde);
+  margin-top: 0;
+}
+
+.boton-secundario:hover { background: #efe2cf; }
+
+.boton-archivo { cursor: pointer; }
+
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   * { transition: none !important; }

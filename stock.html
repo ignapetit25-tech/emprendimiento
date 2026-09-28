@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cytrino — Stock</title>
+  <meta name="description" content="Gestión de stock de Cytrino: existencias y movimientos.">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <a class="salto" href="#existencias">Saltar a existencias</a>
+  <nav class="barra" aria-label="Navegación principal">
+    <a class="marca" href="index.html">Cytrino</a>
+    <div class="enlaces">
+      <a href="index.html">Catálogo</a>
+      <a href="stock.html" aria-current="page">Stock</a>
+    </div>
+  </nav>
+
+  <main>
+    <section id="existencias" aria-labelledby="titulo-existencias">
+      <h2 id="titulo-existencias">Existencias</h2>
+      <p class="ayuda">Cuántas unidades hay de cada producto. Todo se guarda en este navegador.</p>
+      <p id="estado-stock" role="status" aria-live="polite">Cargando...</p>
+      <div class="tabla-wrap">
+        <table id="tabla-stock">
+          <thead>
+            <tr><th scope="col">Producto</th><th scope="col">Código</th><th scope="col">Unidades</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="movimiento" aria-labelledby="titulo-movimiento">
+      <h2 id="titulo-movimiento">Anotar movimiento</h2>
+      <form id="form-mov" class="formulario">
+        <label>Producto:
+          <select id="mov-producto" required></select>
+        </label>
+        <label>Tipo:
+          <select id="mov-tipo" required>
+            <option value="entrada">Entrada (compré / me llegaron)</option>
+            <option value="salida">Salida (vendí / regalé / se rompió)</option>
+          </select>
+        </label>
+        <label>Cantidad:
+          <input id="mov-cantidad" type="number" min="1" step="1" value="1" required>
+        </label>
+        <label>Nota (opcional):
+          <input id="mov-nota" type="text" maxlength="120" placeholder="Ej: compra mayorista, venta feria...">
+        </label>
+        <button type="submit" class="boton">Guardar movimiento</button>
+      </form>
+      <p id="aviso-mov" role="alert" hidden></p>
+    </section>
+
+    <section id="historial" aria-labelledby="titulo-historial">
+      <h2 id="titulo-historial">Historial de movimientos</h2>
+      <p class="ayuda">Los más nuevos primero. Si te equivocás, podés borrar un movimiento.</p>
+      <div class="tabla-wrap">
+        <table id="tabla-movs">
+          <thead>
+            <tr><th scope="col">Fecha</th><th scope="col">Producto</th><th scope="col">Tipo</th><th scope="col">Cantidad</th><th scope="col">Nota</th><th scope="col"><span class="solo-lectores">Acciones</span></th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p id="sin-movs" hidden>Todavía no hay movimientos. Anotá el primero arriba.</p>
+    </section>
+
+    <section id="respaldo" aria-labelledby="titulo-respaldo">
+      <h2 id="titulo-respaldo">Respaldo</h2>
+      <p class="ayuda">Los datos viven en este navegador. Descargá una copia de seguridad cada tanto, y cargala si cambiás de compu o navegador.</p>
+      <div class="fila-botones">
+        <button type="button" id="btn-exportar" class="boton boton-secundario">Descargar copia</button>
+        <label class="boton boton-secundario boton-archivo">Cargar copia
+          <input id="importar" type="file" accept="application/json" hidden>
+        </label>
+      </div>
+      <p id="aviso-respaldo" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <p><a class="arriba" href="index.html">Volver al catálogo</a></p>
+    <p class="pie-nota">Cytrino — gestión de stock.</p>
+  </footer>
+
+  <script src="assets/js/stock-logica.js"></script>
+  <script src="assets/js/stock.js"></script>
+</body>
+</html>
