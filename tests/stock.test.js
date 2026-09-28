@@ -7,6 +7,8 @@ const {
   validarMovimiento,
   crearMovimiento,
   validarRespaldo,
+  movimientosACSV,
+  csvAMovimientos,
 } = require("../assets/js/stock-logica.js");
 
 describe("calcularExistencias", () => {
@@ -82,5 +84,42 @@ describe("validarRespaldo", () => {
     assert.match(validarRespaldo({}), /no es una copia válida/);
     assert.match(validarRespaldo({ movimientos: [{ productoId: "a" }] }), /inválidos/);
     assert.match(validarRespaldo({ movimientos: [{ productoId: "a", tipo: "entrada", cantidad: 0 }] }), /cantidades/);
+  });
+});
+
+describe("respaldo Excel (CSV)", () => {
+  it("exporta cabecera con punto y coma y BOM para Excel", () => {
+    const csv = movimientosACSV([{ fecha: "2026-01-01T00:00:00.000Z", productoId: "a", tipo: "entrada", cantidad: 2, nota: "" }]);
+    assert.ok(csv.startsWith("\ufefffecha;codigo;tipo;cantidad;nota"));
+    assert.ok(csv.includes("2026-01-01T00:00:00.000Z;a;entrada;2;"));
+  });
+
+  it("escapa notas con punto y coma o comillas", () => {
+    const csv = movimientosACSV([{ fecha: "f", productoId: "a", tipo: "entrada", cantidad: 1, nota: 'compra "mayorista"; urgente' }]);
+    const back = csvAMovimientos(csv);
+    assert.equal(back.error, undefined);
+    assert.equal(back.movimientos[0].nota, 'compra "mayorista"; urgente');
+  });
+
+  it("importa lo exportado (ida y vuelta)", () => {
+    const original = [
+      { fecha: "2026-02-01T10:00:00.000Z", productoId: "a", tipo: "entrada", cantidad: 5, nota: "llegó" },
+      { fecha: "2026-02-02T10:00:00.000Z", productoId: "a", tipo: "salida", cantidad: 2, nota: "" },
+    ];
+    const back = csvAMovimientos(movimientosACSV(original));
+    assert.equal(back.error, undefined);
+    assert.equal(back.movimientos.length, 2);
+    assert.deepEqual(
+      back.movimientos.map((m) => [m.productoId, m.tipo, m.cantidad, m.nota]),
+      [["a", "entrada", 5, "llegó"], ["a", "salida", 2, ""]]
+    );
+    assert.deepEqual(calcularExistencias(back.movimientos), { a: 3 });
+  });
+
+  it("rechaza archivos que no son copia de stock", () => {
+    assert.match(csvAMovimientos("").error, /vacío/);
+    assert.match(csvAMovimientos("nombre,apellido\njuan,perez").error, /encabezado/);
+    assert.match(csvAMovimientos("fecha;codigo;tipo;cantidad;nota\na;b;c").error, /inválida/);
+    assert.match(csvAMovimientos("fecha;codigo;tipo;cantidad;nota\nf;a;salida;0;").error, /cantidades/);
   });
 });

@@ -61,7 +61,75 @@ function validarRespaldo(datos) {
   return null; // válido
 }
 
+// Respaldo en formato Excel (CSV con separador ";" y BOM para tildes).
+const CSV_CABECERA = ["fecha", "codigo", "tipo", "cantidad", "nota"];
+
+function escaparCSV(valor) {
+  const t = String(valor === null || valor === undefined ? "" : valor);
+  return /[";\n\r]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t;
+}
+
+function movimientosACSV(movs) {
+  const lineas = [CSV_CABECERA.join(";")];
+  for (const m of movs || []) {
+    lineas.push([m.fecha || "", m.productoId || "", m.tipo || "", m.cantidad ?? "", m.nota || ""]
+      .map(escaparCSV).join(";"));
+  }
+  return "\ufeff" + lineas.join("\r\n");
+}
+
+function dividirLineaCSV(linea) {
+  const campos = [];
+  let actual = "";
+  let comillas = false;
+  for (let i = 0; i < linea.length; i++) {
+    const c = linea[i];
+    if (comillas) {
+      if (c === '"') {
+        if (linea[i + 1] === '"') { actual += '"'; i++; }
+        else comillas = false;
+      } else actual += c;
+    } else if (c === '"') {
+      comillas = true;
+    } else if (c === ";") {
+      campos.push(actual);
+      actual = "";
+    } else actual += c;
+  }
+  campos.push(actual);
+  return campos;
+}
+
+function csvAMovimientos(texto) {
+  if (!texto || !String(texto).trim()) {
+    return { error: "El archivo está vacío." };
+  }
+  const lineas = String(texto).replace(/^\ufeff/, "").split(/\r?\n/).filter((l) => l.trim() !== "");
+  const cab = dividirLineaCSV(lineas[0]).map((c) => c.trim().toLowerCase());
+  if (cab.join(";") !== CSV_CABECERA.join(";")) {
+    return { error: "El archivo no es una copia válida de stock (encabezado distinto)." };
+  }
+  const movs = [];
+  for (let i = 1; i < lineas.length; i++) {
+    const c = dividirLineaCSV(lineas[i]);
+    if (c.length !== 5) {
+      return { error: `Fila ${i + 1} inválida en el archivo.` };
+    }
+    movs.push({
+      id: "imp" + Date.now().toString(36) + "-" + i,
+      fecha: c[0].trim(),
+      productoId: c[1].trim(),
+      tipo: c[2].trim(),
+      cantidad: Number(c[3].trim()),
+      nota: c[4],
+    });
+  }
+  const invalido = validarRespaldo({ movimientos: movs });
+  if (invalido) return { error: invalido };
+  return { movimientos: movs };
+}
+
 // Exportar para Node sin romper el navegador (script clásico).
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { calcularExistencias, validarMovimiento, crearMovimiento, validarRespaldo };
+  module.exports = { calcularExistencias, validarMovimiento, crearMovimiento, validarRespaldo, movimientosACSV, csvAMovimientos };
 }

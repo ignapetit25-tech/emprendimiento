@@ -113,15 +113,15 @@
     mostrarAviso("Movimiento guardado.");
   });
 
-  // Respaldo: descargar y cargar JSON.
+  // Respaldo en Excel (CSV): descargar y cargar.
   document.getElementById("btn-exportar").addEventListener("click", () => {
-    const blob = new Blob([JSON.stringify({ movimientos }, null, 2)], { type: "application/json" });
+    const blob = new Blob([movimientosACSV(movimientos)], { type: "text/csv;charset=utf-8" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "cytrino-stock-respaldo.json";
+    a.download = "cytrino-stock-respaldo.csv";
     a.click();
     URL.revokeObjectURL(a.href);
-    avisoRespaldo.textContent = "Copia descargada.";
+    avisoRespaldo.textContent = "Copia descargada (se abre con Excel).";
   });
 
   document.getElementById("importar").addEventListener("change", (e) => {
@@ -129,29 +129,23 @@
     if (!archivo) return;
     const lector = new FileReader();
     lector.onload = () => {
-      let datos = null;
-      try {
-        datos = JSON.parse(lector.result);
-      } catch {
-        datos = null;
-      }
-      const error = validarRespaldo(datos);
-      if (error) {
-        avisoRespaldo.textContent = error;
+      const resultado = csvAMovimientos(lector.result);
+      if (resultado.error) {
+        avisoRespaldo.textContent = resultado.error;
         e.target.value = "";
         return;
       }
-      if (!confirm(`Reemplazar los ${movimientos.length} movimiento(s) actuales por los ${datos.movimientos.length} de la copia?`)) {
+      if (!confirm(`Reemplazar los ${movimientos.length} movimiento(s) actuales por los ${resultado.movimientos.length} de la copia?`)) {
         e.target.value = "";
         return;
       }
-      movimientos = datos.movimientos;
+      movimientos = resultado.movimientos;
       guardar();
       dibujar();
       avisoRespaldo.textContent = "Copia cargada correctamente.";
       e.target.value = "";
     };
-    lector.readAsText(archivo);
+    lector.readAsText(archivo, "utf-8");
   });
 
   // Productos del catálogo para nombres y el desplegable.
