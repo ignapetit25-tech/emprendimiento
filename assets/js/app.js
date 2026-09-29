@@ -61,19 +61,29 @@
     }
   }
 
+  let lbToken = 0; // evita que un cierre viejo oculte una apertura nueva
+
   function lbAbrir(producto, indice, origen) {
+    lbToken++;
     lbProducto = producto;
     lbIndice = indice;
     lbOrigen = origen || null;
     lbMostrar();
     lb.hidden = false;
+    void lb.offsetWidth; // fuerza el fundido de entrada
+    lb.classList.add("visible");
     document.body.classList.add("sin-scroll");
     lbCerrar.focus();
   }
 
   function lbCerrarFn() {
-    lb.hidden = true;
+    const turno = ++lbToken;
+    lb.classList.remove("visible");
     document.body.classList.remove("sin-scroll");
+    setTimeout(() => {
+      if (turno !== lbToken) return;
+      lb.hidden = true;
+    }, 180);
     if (lbOrigen && document.contains(lbOrigen)) lbOrigen.focus();
   }
 
@@ -170,7 +180,11 @@
         b.setAttribute("aria-label", "Ver foto " + (i + 1) + " de " + p.nombre);
         b.innerHTML = `<img src="${f}" alt="" loading="lazy" decoding="async">`;
         b.addEventListener("click", () => {
+          if (indice === i) return;
           indice = i;
+          fotoImg.classList.add("cambiando");
+          fotoImg.onload = () => fotoImg.classList.remove("cambiando");
+          fotoImg.onerror = () => fotoImg.classList.remove("cambiando");
           fotoImg.src = f;
           minis.querySelectorAll(".mini").forEach((m) => m.classList.remove("mini-activa"));
           b.classList.add("mini-activa");
@@ -270,6 +284,12 @@
   });
   buscador.addEventListener("input", dibujar);
   orden.addEventListener("change", dibujar);
+
+  // Sombra en la barra al hacer scroll.
+  const barra = document.querySelector(".barra");
+  const actualizarSombra = () => barra.classList.toggle("con-sombra", window.scrollY > 4);
+  window.addEventListener("scroll", actualizarSombra, { passive: true });
+  actualizarSombra();
 
   // Nombre de la tienda en marca, portada y título.
   document.getElementById("nombre-tienda").textContent = TIENDA.nombre;
