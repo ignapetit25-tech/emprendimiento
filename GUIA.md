@@ -1,5 +1,11 @@
 # Guía del catálogo (para mamá)
 
+## Abrir el catálogo en tu celular
+1. La dirección es: `https://ignapetit25-tech.github.io/emprendimiento/`. Ignacio te la puede mandar por chat: tocás el enlace y se abre.
+2. O escaneá el código QR que aparece al final de la página con la cámara del celular.
+3. Para guardarlo a mano: en el navegador del celular tocá los 3 puntitos → "Agregar a pantalla principal". Te queda un ícono como una app.
+4. En el celular se ve de a un producto por fila, con letras y botones grandes. Todo funciona igual: buscar, filtrar, ampliar fotos y pedir por chat.
+
 ## Ver el catálogo en el celular o la compu
 1. Abrí la dirección del catálogo que te pase Ignacio (termina en `github.io/...`).
 2. Para buscar algo, escribí en el cuadro de búsqueda (ejemplo: `osito`). No importan las tildes: `tazon` también encuentra "tazón". Podés buscar por código (ejemplo: `vaso-osito`).

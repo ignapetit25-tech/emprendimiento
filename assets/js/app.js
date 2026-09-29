@@ -68,6 +68,7 @@
     lbProducto = producto;
     lbIndice = indice;
     lbOrigen = origen || null;
+    lbFoto.classList.remove("cambiando");
     lbMostrar();
     lb.hidden = false;
     void lb.offsetWidth; // fuerza el fundido de entrada
@@ -89,13 +90,18 @@
 
   lbCerrar.addEventListener("click", lbCerrarFn);
   lb.addEventListener("click", (e) => { if (e.target === lb) lbCerrarFn(); });
-  lbAnt.addEventListener("click", () => {
-    lbIndice = (lbIndice - 1 + lbProducto.fotos.length) % lbProducto.fotos.length;
+  function lbCambiarFoto(nuevoIndice) {
+    lbFoto.classList.add("cambiando");
+    lbFoto.onload = () => lbFoto.classList.remove("cambiando");
+    lbFoto.onerror = () => lbFoto.classList.remove("cambiando");
+    lbIndice = nuevoIndice;
     lbMostrar();
+  }
+  lbAnt.addEventListener("click", () => {
+    lbCambiarFoto((lbIndice - 1 + lbProducto.fotos.length) % lbProducto.fotos.length);
   });
   lbSig.addEventListener("click", () => {
-    lbIndice = (lbIndice + 1) % lbProducto.fotos.length;
-    lbMostrar();
+    lbCambiarFoto((lbIndice + 1) % lbProducto.fotos.length);
   });
   // Trampa de foco: Tab cicla dentro del modal abierto.
   lb.addEventListener("keydown", (e) => {
