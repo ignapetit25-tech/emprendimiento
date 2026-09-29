@@ -38,15 +38,23 @@ Significa que todavía no tiene precio cargado. Se cambia como en el punto anter
 2. En el catálogo aparece un sello con esa palabra.
 3. Para sacarlo, borrá esa línea.
 
+## PIN de administradora (stock y finanzas)
+1. Al pie del catálogo tocá **“Stock (admin)”** o **“Finanzas (admin)”**.
+2. La primera vez en cada celular o compu, te pide **crear un PIN** de 4 a 8 números. Elegilo y anotalo en un papel seguro.
+3. Las veces siguientes te pide ese PIN para entrar. Sin el PIN nadie ve tus números.
+4. Para cambiarlo, entrá y buscá la sección **PIN de administradora** al final de la página.
+5. Para salir, tocá **Cerrar sesión** arriba. Si cerrás la pestaña, se bloquea solo.
+6. OJO: el PIN se guarda en ese aparato. Si usás otro celular, tenés que crear el PIN ahí también.
+
 ## Gestión de stock
-1. Al pie del catálogo tocá **“Gestión de stock”** (o abrí `stock.html`).
+1. Al pie del catálogo tocá **“Stock (admin)”** (o abrí `stock.html`) e ingresá tu PIN.
 2. En **Existencias** ves cuántas unidades hay de cada producto.
 3. Para anotar: en **Anotar movimiento** elegí el producto, el tipo (entrada si te llegaron, salida si vendiste) y la cantidad. Podés agregar una nota.
 4. Si te equivocás, en **Historial** tocá **Borrar** en ese movimiento.
 5. IMPORTANTE: los datos se guardan en ese navegador. Tocá **Descargar Excel** cada tanto y guardá el archivo (se abre con Excel e incluye nombres de producto, fechas legibles y totales por producto). Si cambiás de compu o navegador, usá **Cargar Excel** para recuperar todo.
 
 ## Finanzas
-1. Al pie del catálogo tocá **“Finanzas”** (o abrí `finanzas.html`).
+1. Al pie del catálogo tocá **“Finanzas (admin)”** (o abrí `finanzas.html`) e ingresá tu PIN.
 2. En **Balance mensual** elegí el mes: ves ventas, gastos, costos y el balance (ventas menos gastos menos costos).
 3. Para anotar: elegí el tipo (**venta** si entra plata, **gasto** como luz o alquiler, **costo** como mercadería), escribí el concepto, el monto y la fecha. El producto es opcional.
 4. Si te equivocás, en **Movimientos del mes** tocá **Borrar** en ese movimiento.

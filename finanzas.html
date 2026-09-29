@@ -8,7 +8,7 @@
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
-<body>
+<body class="bloqueado">
   <a class="salto" href="#balance">Saltar al balance</a>
   <nav class="barra" aria-label="Navegación principal">
     <a class="marca" href="index.html">Cytrino</a>
@@ -16,8 +16,21 @@
       <a href="index.html">Catálogo</a>
       <a href="stock.html">Stock</a>
       <a href="finanzas.html" aria-current="page">Finanzas</a>
+      <a href="#" id="salir" hidden>Cerrar sesión</a>
     </div>
   </nav>
+
+  <div id="puerta">
+    <form id="puerta-form" class="formulario puerta-caja">
+      <h2 id="puerta-titulo">Zona de administración</h2>
+      <p id="puerta-error" role="status"></p>
+      <label>PIN:
+        <input id="puerta-pin" type="password" inputmode="numeric" maxlength="8" autocomplete="off" required>
+      </label>
+      <button id="puerta-boton" type="submit" class="boton">Entrar</button>
+      <p class="ayuda"><a href="index.html">Volver al catálogo</a></p>
+    </form>
+  </div>
 
   <main>
     <section id="balance" aria-labelledby="titulo-balance">
@@ -77,6 +90,20 @@
       <p id="sin-movs" hidden>Todavía no hay movimientos en este mes.</p>
     </section>
 
+    <section id="admin" aria-labelledby="titulo-admin">
+      <h2 id="titulo-admin">PIN de administradora</h2>
+      <form id="form-pin" class="formulario">
+        <label>PIN actual:
+          <input id="pin-actual" type="password" inputmode="numeric" maxlength="8" autocomplete="off" required>
+        </label>
+        <label>PIN nuevo (4 a 8 números):
+          <input id="pin-nuevo" type="password" inputmode="numeric" maxlength="8" autocomplete="off" required>
+        </label>
+        <button type="submit" class="boton">Cambiar PIN</button>
+      </form>
+      <p id="aviso-pin" role="status" aria-live="polite"></p>
+    </section>
+
     <section id="respaldo" aria-labelledby="titulo-respaldo">
       <h2 id="titulo-respaldo">Respaldo</h2>
       <p class="ayuda">Los datos viven en este navegador. Descargá una copia en Excel cada tanto, y cargala si cambiás de compu o navegador.</p>
@@ -95,6 +122,8 @@
     <p class="pie-nota">Cytrino — finanzas.</p>
   </footer>
 
+  <script src="assets/js/admin-logica.js"></script>
+  <script src="assets/js/admin.js"></script>
   <script src="assets/js/finanzas-logica.js"></script>
   <script src="assets/js/finanzas.js"></script>
 </body>

@@ -610,6 +610,16 @@ tr.balance-negativo td { color: var(--acento-oscuro); font-weight: bold; }
 
 .boton-archivo { cursor: pointer; }
 
+/* Puerta de administradora */
+body.bloqueado main,
+body.bloqueado .pie,
+body.bloqueado .barra .enlaces { display: none; }
+
+#puerta { max-width: 420px; margin: 40px auto; padding: 0 16px; }
+#puerta[hidden] { display: none; }
+.puerta-caja h2 { margin-top: 0; font-size: 1.3rem; }
+#salir { color: var(--acento); }
+
 .solo-lectores {
   position: absolute;
   width: 1px;
