@@ -317,6 +317,14 @@
 
   fetch("data/productos.json")
     .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
-    .then((data) => { productos = data; actualizarContadores(); dibujar(); resaltarDesdeHash(); })
+    .then((data) => {
+      productos = data;
+      actualizarContadores();
+      const cats = new Set(productos.map((p) => p.categoria)).size;
+      document.getElementById("portada-stats").textContent =
+        `${productos.length} productos · ${cats} categorías · Pedidos por chat`;
+      dibujar();
+      resaltarDesdeHash();
+    })
     .catch(() => { estado.textContent = "No se pudo cargar el catálogo. Revisá data/productos.json."; });
 })();

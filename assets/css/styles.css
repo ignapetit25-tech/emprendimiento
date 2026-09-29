@@ -101,17 +101,35 @@ input:focus-visible {
   align-items: center;
 }
 
-.portada-texto { flex: 1 1 320px; }
+.portada-texto { flex: 1 1 300px; }
 
-.portada-foto {
-  flex: 0 1 320px;
-  width: 320px;
-  max-width: 38vw;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 12px;
-  border: 1px solid var(--borde);
+.portada h1 { letter-spacing: -0.01em; }
+
+.portada-stats { color: var(--suave); font-size: 0.92rem; margin: 0 0 14px; }
+.portada-stats:empty { display: none; }
+
+.portada-acciones { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+
+.portada-secundario { color: var(--acento); font-size: 1rem; }
+
+.portada-collage {
+  flex: 0 1 400px;
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  grid-template-rows: repeat(2, 150px);
+  gap: 10px;
 }
+
+.portada-collage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 5px solid var(--tarjeta);
+  box-shadow: var(--sombra);
+}
+
+.collage-grande { grid-row: span 2; border-radius: 14px; }
+.collage-chica { border-radius: 10px; }
 
 .portada h1 { margin: 0 0 6px; font-size: 2rem; }
 
@@ -128,8 +146,19 @@ section { padding: 18px 0; scroll-margin-top: 64px; }
 section h2 {
   font-size: 1.45rem;
   margin: 0 0 12px;
-  padding-bottom: 6px;
-  border-bottom: 2px solid var(--borde);
+  padding-bottom: 8px;
+  position: relative;
+}
+
+section h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 56px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--acento);
 }
 
 .controles {
@@ -512,7 +541,8 @@ a.boton { width: fit-content; padding: 11px 22px; }
 
 @media (max-width: 640px) {
   .portada-interior { flex-direction: column; align-items: stretch; }
-  .portada-foto { width: 100%; max-width: none; flex: none; }
+  .portada-collage { flex: none; grid-template-columns: 1fr 1fr; grid-template-rows: 220px 130px; }
+  .collage-grande { grid-column: span 2; grid-row: auto; }
   .portada h1 { font-size: 1.6rem; }
   .nosotros-interior { flex-direction: column; align-items: stretch; }
   .nosotros-foto { width: 100%; max-width: none; flex: none; }
